@@ -36,6 +36,18 @@ app.put("/transactions/:id", (req, res) => {
   );
 });
 
+app.delete("/transactions/:id", (req, res) => {
+  const id = req.params.id;
+  db.run(`DELETE FROM transactions WHERE id = ?`, [id], function (err) {
+    if (err) {
+      console.error("Error deleting transaction:", err);
+      res.status(500).json({ error: "Failed to delete transaction" });
+      return;
+    }
+    res.json({ message: "Transaction deleted successfully" });
+  });
+});
+
 app.post("/transactions", (req, res) => {
   const { description, amount, category, date } = req.body;
   db.run(
