@@ -19,6 +19,23 @@ app.get("/transactions", (req, res) => {
   });
 });
 
+app.put("/transactions/:id", (req, res) => {
+  const id = req.params.id;
+  const { description, amount, category, date } = req.body;
+
+  db.run(
+    `UPDATE transactions SET description = ?, amount = ?, category = ?, date = ? WHERE id = ?`,
+    [description, amount, category, date, id],
+    function (err) {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      res.json({ message: "Transaction updated successfully" });
+    }
+  );
+});
+
 app.post("/transactions", (req, res) => {
   const { description, amount, category, date } = req.body;
   db.run(
